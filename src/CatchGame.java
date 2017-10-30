@@ -23,6 +23,7 @@ public class CatchGame {
     private boolean isthegameoverfam = false;
     private boolean docwon = false;
     private boolean dalekwon = false;
+    private boolean docdead = false;
 
     /**
      * The constructor for the game. Use it to initialize your game variables.
@@ -68,12 +69,13 @@ public class CatchGame {
 
             // crashing is detected before any reprinting is done
             crash();
+            
+            // detects whether or not the game meets the requirements for a win for either side
+            endGame();
 
             // printing the characters back with their new position and "states" (eg. crashed is red and stationary)
             rePrint();
 
-            // detects whether or not the game meets the requirements for a win for either side
-            endGame();
 
 
         }
@@ -127,6 +129,10 @@ public class CatchGame {
             d3.crash();
             d1.crash();
         }
+        
+        if(doc.getCol() == d1.getCol() && doc.getRow() == d1.getRow() || doc.getCol() == d2.getCol() && doc.getRow() == d2.getRow() || doc.getCol() == d3.getCol() && doc.getRow() == d3.getRow()) {
+            docdead = true;
+        }
     }
 
     public void rePrint() {
@@ -153,12 +159,18 @@ public class CatchGame {
         } else {
             b.putPeg(Color.RED, d3.getRow(), d3.getCol());
         }
-
+        
+        // reprinting the doctor
+        if(!docdead){
+        b.putPeg(Color.GREEN, doc.getRow(), doc.getCol());
+        } else {
+            b.putPeg(Color.YELLOW, doc.getRow(), doc.getCol());
+        }
     }
 
     public void endGame() {
         // if the doctor touches any of the daleks, the game end boolean is turned to true and the dalek are given the victory
-        if (doc.getCol() == d1.getCol() && doc.getRow() == d1.getRow() || doc.getCol() == d2.getCol() && doc.getRow() == d2.getRow() || doc.getCol() == d3.getCol() && doc.getRow() == d3.getRow()) {
+        if (docdead) {
             isthegameoverfam = true;
             dalekwon = true;
         }
